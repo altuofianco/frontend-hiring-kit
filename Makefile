@@ -43,15 +43,15 @@ data-init: ## Copy all sample.* files to {DATABASE_NAME}.txt
 	done; \
 	if [ $$HAS_EXISTING -eq 1 ]; then \
 		echo "$(YELLOW)Some target files already exist. Use 'make data-refresh' to overwrite.$(NC)"; \
-		exit 1; \
-	fi; \
-	for SAMPLE in $$SAMPLE_FILES; do \
-		DB_NAME=$$(basename $$SAMPLE | sed 's/^sample\.//'); \
-		TARGET=$(DATA_DIR)/$$DB_NAME.txt; \
-		cp $$SAMPLE $$TARGET; \
-		echo "$(GREEN)Created $$DB_NAME.txt from sample.$$DB_NAME$(NC)"; \
-	done; \
-	echo "$(GREEN)All data files initialized successfully!$(NC)"
+	else \
+		for SAMPLE in $$SAMPLE_FILES; do \
+			DB_NAME=$$(basename $$SAMPLE | sed 's/^sample\.//'); \
+			TARGET=$(DATA_DIR)/$$DB_NAME.txt; \
+			cp $$SAMPLE $$TARGET; \
+			echo "$(GREEN)Created $$DB_NAME.txt from sample.$$DB_NAME$(NC)"; \
+		done; \
+		echo "$(GREEN)All data files initialized successfully!$(NC)"; \
+	fi;
 
 data-refresh: ## Delete and recreate all {DATABASE_NAME}.txt from sample.* files
 	@SAMPLE_FILES=$$(find $(DATA_DIR) -maxdepth 1 -name "sample.*" -type f); \
